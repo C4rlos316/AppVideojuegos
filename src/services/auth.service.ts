@@ -1,0 +1,63 @@
+import { User, AuthResponse } from '../types/auth.types';
+
+const USERS_KEY = 'videogames_users';
+const CURRENT_USER_KEY = 'videogames_current_user';
+
+export const authService = {
+  login(email: string, password: string): AuthResponse {
+    try {
+      const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]') as User[];
+      const user = users.find(u => u.email === email && u.password === password);
+      
+      if (!user) {
+        return { success: false, error: 'Credenciales inválidas' };
+      }
+      
+      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+      return { success: true, user };
+    } catch (error) {
+      return { success: false, error: 'Error al iniciar sesión' };
+    }
+  },
+
+  register(email: string, password: string): AuthResponse {
+    try {
+      const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]') as User[];
+      
+      if (users.some(u => u.email === email)) {
+        return { success: false, error: 'El usuario ya existe' };
+      }
+      
+      const newUser: User = {
+        id: Date.now().toString(),
+        email,
+        password
+      };
+      
+      users.push(newUser);
+      localStorage.setItem(USERS_KEY, JSON.stringify(users));
+      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(newUser));
+      
+      return { success: true, user: newUser };
+    } catch (error) {
+      return { success: false, error: 'Error al registrar usuario' };
+    }
+  },
+
+  logout(): void {
+    localStorage.removeItem(CURRENT_USER_KEY);
+  },
+
+  getCurrentUser(): User | null {
+    try {
+      const userData = localStorage.getItem(CURRENT_USER_KEY);
+      return userData ? JSON.parse(userData) as User : null;
+    } catch (error) {
+      return null;
+    }
+  },
+
+  isAuthenticated(): boolean {
+    return this.getCurrentUser() !== null;
+  }
+};
