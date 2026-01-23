@@ -43,3 +43,7 @@ dist-ssr/
 *.njsproj
 *.sln
 *.sw?
+# ======================
+# TRAE (agents / skills)
+# ======================
+.trae/skills/
