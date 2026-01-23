@@ -55,7 +55,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
       } else {
         setError('El usuario ya existe');
       }
-    } catch (err) {
+    } catch {
       setError('Error al registrar usuario. Por favor intenta nuevamente.');
     } finally {
       setLoading(false);

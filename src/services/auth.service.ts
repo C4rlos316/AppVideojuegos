@@ -15,7 +15,7 @@ export const authService = {
       
       localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
       return { success: true, user };
-    } catch (error) {
+    } catch {
       return { success: false, error: 'Error al iniciar sesión' };
     }
   },
@@ -39,7 +39,7 @@ export const authService = {
       localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(newUser));
       
       return { success: true, user: newUser };
-    } catch (error) {
+    } catch {
       return { success: false, error: 'Error al registrar usuario' };
     }
   },
@@ -52,7 +52,7 @@ export const authService = {
     try {
       const userData = localStorage.getItem(CURRENT_USER_KEY);
       return userData ? JSON.parse(userData) as User : null;
-    } catch (error) {
+    } catch {
       return null;
     }
   },

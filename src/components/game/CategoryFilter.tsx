@@ -34,16 +34,13 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
             }
           })
         );
-        if (!mounted) return;
         const map: Record<string, number> = {};
         results.forEach(r => { map[r.slug] = r.count; });
-        setCounts(map);
-      } catch (e) {
-        if (!mounted) return;
+        if (mounted) setCounts(map);
+      } catch {
         setError('No se pudo cargar el conteo por categoría');
       } finally {
-        if (!mounted) return;
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
     };
     load();
