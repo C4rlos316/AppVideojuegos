@@ -32,6 +32,24 @@ export const gameService = {
     }
   },
 
+  async getCountByGenre(genre: string): Promise<number> {
+    try {
+      const url = buildUrl('/games', {
+        genres: genre,
+        page_size: 1
+      });
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data: GamesResponse = await response.json();
+      return data.count;
+    } catch (error) {
+      console.error('Error al obtener conteo por género:', error);
+      throw new Error('No se pudo cargar el conteo de videojuegos.');
+    }
+  },
+
   async getGameDetails(id: number): Promise<Game> {
     try {
       const url = buildUrl(`/games/${id}`);

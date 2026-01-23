@@ -48,7 +48,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
       } else {
         setError('Credenciales inválidas');
       }
-    } catch (err) {
+    } catch {
       setError('Error al iniciar sesión. Por favor intenta nuevamente.');
     } finally {
       setLoading(false);

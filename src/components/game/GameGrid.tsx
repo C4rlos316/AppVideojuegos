@@ -4,7 +4,7 @@ import GameCard from './GameCard';
 import LoadingSpinner from '../common/LoadingSpinner';
 import ErrorMessage from '../common/ErrorMessage';
 import { Game, GameCategory } from '../../types/game.types';
-import { gameService, gameCategories } from '../../services/game.service';
+import { gameService } from '../../services/game.service';
 
 interface GameGridProps {
   category?: GameCategory;

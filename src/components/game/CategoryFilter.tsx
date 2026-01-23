@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Chip, Typography } from '@mui/material';
 import { GameCategory } from '../../types/game.types';
+import { gameService } from '../../services/game.service';
 
 interface CategoryFilterProps {
   categories: GameCategory[];
@@ -13,6 +14,39 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
   selectedCategory, 
   onCategoryChange 
 }) => {
+  const [counts, setCounts] = useState<Record<string, number>>({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const results = await Promise.all(
+          categories.map(async (c) => {
+            try {
+              const count = await gameService.getCountByGenre(c.slug);
+              return { slug: c.slug, count };
+            } catch {
+              return { slug: c.slug, count: 0 };
+            }
+          })
+        );
+        const map: Record<string, number> = {};
+        results.forEach(r => { map[r.slug] = r.count; });
+        if (mounted) setCounts(map);
+      } catch {
+        setError('No se pudo cargar el conteo por categoría');
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+    load();
+    return () => { mounted = false; };
+  }, [categories]);
+
   return (
     <Box sx={{ mb: 4 }}>
       <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
@@ -31,7 +65,13 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
         {categories.map((category) => (
           <Chip
             key={category.slug}
-            label={category.name}
+            label={
+              counts[category.slug] !== undefined
+                ? `${category.name} (${counts[category.slug]})`
+                : loading
+                ? `${category.name} (···)`
+                : category.name
+            }
             onClick={() => onCategoryChange(category)}
             color={selectedCategory?.slug === category.slug ? 'primary' : 'default'}
             variant={selectedCategory?.slug === category.slug ? 'filled' : 'outlined'}
@@ -46,6 +86,11 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
           />
         ))}
       </Box>
+      {error && (
+        <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+          {error}
+        </Typography>
+      )}
     </Box>
   );
 };
