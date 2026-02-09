@@ -8,6 +8,7 @@ interface AuthContextType {
   register: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   loading: boolean;
+  updateProfile: (partial: Partial<User>) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -57,12 +58,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser(null);
   };
 
+  const updateProfile = async (partial: Partial<User>): Promise<boolean> => {
+    const response = authService.updateProfile(partial);
+    if (response.success && response.user) {
+      setUser(response.user);
+      return true;
+    }
+    return false;
+  };
+
   const value = {
     user,
     login,
     register,
     logout,
-    loading
+    loading,
+    updateProfile
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
