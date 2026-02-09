@@ -9,9 +9,11 @@ import {
 } from '@mui/material';
 import { SportsEsports as GameIcon, Logout as LogoutIcon } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
@@ -43,6 +45,19 @@ const Header: React.FC = () => {
             <Typography variant="body2" sx={{ opacity: 0.8 }}>
               {user.email}
             </Typography>
+            <Button
+              color="inherit"
+              onClick={() => navigate('/profile')}
+              sx={{ 
+                textTransform: 'none',
+                fontWeight: 600,
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                }
+              }}
+            >
+              Perfil
+            </Button>
             <Button
               color="inherit"
               onClick={handleLogout}

@@ -31,7 +31,11 @@ export const authService = {
       const newUser: User = {
         id: Date.now().toString(),
         email,
-        password
+        password,
+        displayName: email.split('@')[0],
+        avatarUrl: '',
+        bio: '',
+        favoriteGenres: []
       };
       
       users.push(newUser);
@@ -54,6 +58,26 @@ export const authService = {
       return userData ? JSON.parse(userData) as User : null;
     } catch {
       return null;
+    }
+  },
+
+  updateProfile(partial: Partial<User>): AuthResponse {
+    try {
+      const current = this.getCurrentUser();
+      if (!current) {
+        return { success: false, error: 'No autenticado' };
+      }
+      const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]') as User[];
+      const updated: User = { ...current, ...partial, id: current.id, email: current.email, password: current.password };
+      const idx = users.findIndex(u => u.id === current.id);
+      if (idx >= 0) {
+        users[idx] = updated;
+        localStorage.setItem(USERS_KEY, JSON.stringify(users));
+      }
+      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(updated));
+      return { success: true, user: updated };
+    } catch {
+      return { success: false, error: 'No se pudo actualizar el perfil' };
     }
   },
 
