@@ -2,11 +2,13 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import { AuthProvider } from './contexts/AuthContext';
+import { FavoritesProvider } from './contexts/FavoritesContext';
 import ProtectedRoute from './components/layout/ProtectedRoute';
 import AuthPage from './pages/AuthPage';
 import HomePage from './pages/HomePage';
 import { useAuth } from './contexts/AuthContext';
 import ProfilePage from './pages/ProfilePage';
+import FavoritesPage from './pages/FavoritesPage';
 
 const theme = createTheme({
   palette: {
@@ -69,6 +71,14 @@ const AppContent: React.FC = () => {
           </ProtectedRoute>
         } 
       />
+      <Route 
+        path="/favorites" 
+        element={
+          <ProtectedRoute>
+            <FavoritesPage />
+          </ProtectedRoute>
+        } 
+      />
     </Routes>
   );
 };
@@ -78,9 +88,11 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <AuthProvider>
-        <Router>
-          <AppContent />
-        </Router>
+        <FavoritesProvider>
+          <Router>
+            <AppContent />
+          </Router>
+        </FavoritesProvider>
       </AuthProvider>
     </ThemeProvider>
   );
