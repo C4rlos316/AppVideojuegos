@@ -1,4 +1,4 @@
-import { Game, GamesResponse, GameCategory } from '../types/game.types';
+import { GamesResponse, GameCategory, GameDetails } from '../types/game.types';
 import { API_CONFIG, buildUrl } from './api.config';
 
 export const gameCategories: GameCategory[] = [
@@ -50,7 +50,7 @@ export const gameService = {
     }
   },
 
-  async getGameDetails(id: number): Promise<Game> {
+  async getGameDetails(id: number): Promise<GameDetails> {
     try {
       const url = buildUrl(`/games/${id}`);
       const response = await fetch(url);

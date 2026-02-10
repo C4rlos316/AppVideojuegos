@@ -8,9 +8,10 @@ import { gameService } from '../../services/game.service';
 
 interface GameGridProps {
   category?: GameCategory;
+  onSelectGame?: (game: Game) => void;
 }
 
-const GameGrid: React.FC<GameGridProps> = ({ category }) => {
+const GameGrid: React.FC<GameGridProps> = ({ category, onSelectGame }) => {
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -77,7 +78,7 @@ const GameGrid: React.FC<GameGridProps> = ({ category }) => {
       <Grid container spacing={3}>
         {games.map((game) => (
           <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={game.id}>
-            <GameCard game={game} />
+            <GameCard game={game} onSelect={onSelectGame} />
           </Grid>
         ))}
       </Grid>

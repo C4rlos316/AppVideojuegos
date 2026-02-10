@@ -23,3 +23,13 @@ export interface GameCategory {
   slug: string;
   color: string;
 }
+
+export interface GameDetails extends Game {
+  description_raw?: string;
+  description?: string;
+  released?: string;
+  metacritic?: number;
+  rating_top?: number;
+  ratings_count?: number;
+  website?: string;
+}
