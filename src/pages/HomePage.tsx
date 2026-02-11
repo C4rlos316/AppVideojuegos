@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Box } from '@mui/material';
 import Header from '../components/layout/Header';
 import GameGrid from '../components/game/GameGrid';
@@ -6,16 +6,28 @@ import CategoryFilter from '../components/game/CategoryFilter';
 import GameDetailModal from '../components/game/GameDetailModal';
 import { Game, GameCategory } from '../types/game.types';
 import { gameCategories } from '../services/game.service';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const HomePage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<GameCategory | null>(null);
   const [selectedGameId, setSelectedGameId] = useState<number | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const handleSelectGame = (game: Game) => {
     setSelectedGameId(game.id);
     setDetailOpen(true);
   };
+
+  useEffect(() => {
+    const state = location.state as { selectedGameId?: number } | null;
+    if (state?.selectedGameId) {
+      setSelectedGameId(state.selectedGameId);
+      setDetailOpen(true);
+      navigate(location.pathname, { replace: true, state: null });
+    }
+  }, [location, navigate]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
